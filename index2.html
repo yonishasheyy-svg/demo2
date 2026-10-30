@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="no">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f8f6f3" />
+    <title>Halden på vei — buss med lave skuldre</title>
+    <link rel="stylesheet" href="vær.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Halden på vei, hjem">
+        <span class="brand-mark" aria-hidden="true"
+          ><span></span><span></span><span></span
+        ></span>
+        <span>halden<span class="brand-light">på vei</span></span>
+      </a>
+      <nav class="top-nav" aria-label="Hovedmeny">
+        <a class="nav-active" href="#planlegger">Reiseplanlegger</a>
+        <a href="#avganger">Avganger</a>
+        <a
+          class="entur-link"
+          href="https://entur.no/"
+          target="_blank"
+          rel="noreferrer"
+          >Entur ↗</a
+        >
+      </nav>
+      <button
+        class="theme-toggle"
+        id="theme-toggle"
+        type="button"
+        aria-label="Slå på mørkt Halloween-tema"
+        aria-pressed="false"
+      >
+        <span class="theme-icon" aria-hidden="true">🌙</span>
+        <span class="theme-label">Mørkt tema</span>
+      </button>
+    </header>
+
+    <main>
+      <section class="intro" id="planlegger">
+        <div class="intro-copy">
+          <p class="eyebrow"><span class="live-dot"></span> HALDEN, ØSTFOLD</p>
+          <h1>Buss i Halden.<br /><span>Null stress.</span></h1>
+          <p class="intro-text">
+            Finn en avgang og kom deg dit du skal. Enkelt og greit.
+          </p>
+        </div>
+        <div class="sun-doodle" aria-hidden="true">
+          <span class="pumpkin">🎃</span>
+          <span class="little-star">✦</span>
+        </div>
+      </section>
+
+      <section class="planner-card" aria-label="Søk etter bussreise">
+        <div class="planner-heading">
+          <div>
+            <p class="eyebrow">HVOR SKAL DU?</p>
+            <h2>Planlegg reisen</h2>
+          </div>
+          <span class="calm-note"
+            ><span aria-hidden="true">✦</span> Litt høststemning</span
+          >
+        </div>
+        <form id="journey-form">
+          <div class="places">
+            <label class="place-field">
+              <span class="field-icon from-icon" aria-hidden="true"></span>
+              <span class="field-copy"
+                ><span class="field-label">Fra</span>
+                <select id="from" aria-label="Fra">
+                  <option>Halden bussterminal</option>
+                  <option>Halden stasjon</option>
+                  <option>Remmen</option>
+                  <option>Fredriksten festning</option>
+                  <option>Svinesundparken</option>
+                </select>
+              </span>
+            </label>
+            <button
+              class="swap-button"
+              id="swap"
+              type="button"
+              aria-label="Bytt start og mål"
+            >
+              ↕
+            </button>
+            <label class="place-field">
+              <span class="field-icon to-icon" aria-hidden="true"></span>
+              <span class="field-copy"
+                ><span class="field-label">Til</span>
+                <select id="to" aria-label="Til">
+                  <option>Remmen</option>
+                  <option>Halden bussterminal</option>
+                  <option>Halden stasjon</option>
+                  <option>Fredriksten festning</option>
+                  <option>Svinesundparken</option>
+                </select>
+              </span>
+            </label>
+          </div>
+          <div class="search-bottom">
+            <div class="time-controls">
+              <label class="date-field">
+                <span class="field-label">Dato</span>
+                <input id="travel-date" type="date" aria-label="Velg dato" />
+              </label>
+              <span class="control-divider"></span>
+              <label class="date-field time-field">
+                <span class="field-label">Tid</span>
+                <input
+                  id="travel-time"
+                  type="time"
+                  aria-label="Velg klokkeslett"
+                />
+              </label>
+              <div class="time-mode" role="group" aria-label="Tidspunkt">
+                <button
+                  type="button"
+                  class="mode-button selected"
+                  data-mode="departure"
+                >
+                  Avgang
+                </button>
+                <button type="button" class="mode-button" data-mode="arrival">
+                  Ankomst
+                </button>
+              </div>
+            </div>
+            <button class="search-button" type="submit">
+              <span>Søk reise</span><span aria-hidden="true">→</span>
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <section class="results-section" id="avganger">
+        <div class="results-heading">
+          <div>
+            <p class="eyebrow">BUSSAVGANGER</p>
+            <h2 id="results-title">Avganger i Halden</h2>
+          </div>
+          <span class="today-label" id="today-label"></span>
+        </div>
+        <div class="demo-notice">
+          <span class="notice-icon" aria-hidden="true">i</span>
+          <p>
+            <strong>Eksempelavganger</strong> – tidene her er kun for
+            demonstrasjon og er ikke sanntidsdata. Sjekk
+            <a href="https://entur.no/" target="_blank" rel="noreferrer"
+              >Entur</a
+            >
+            før du reiser.
+          </p>
+        </div>
+        <div class="trip-list" id="trip-list" aria-live="polite"></div>
+        <p class="footer-note">
+          Laget for rolige reiser i Halden <span aria-hidden="true">✳</span>
+        </p>
+      </section>
+    </main>
+
+    <footer>
+      <span>halden på vei</span>
+      <span>Små turer. Fine dager.</span>
+    </footer>
+
+    <script>
+      const exampleTrips = [
+        {
+          time: "10:12",
+          arrive: "10:24",
+          line: "Lokalbuss",
+          via: "via Halden sentrum",
+          duration: "12 min",
+          mood: "Rolig reise",
+        },
+        {
+          time: "10:42",
+          arrive: "10:54",
+          line: "Lokalbuss",
+          via: "via sentrum",
+          duration: "12 min",
+          mood: "God tid underveis",
+        },
+        {
+          time: "11:12",
+          arrive: "11:24",
+          line: "Lokalbuss",
+          via: "via sentrum",
+          duration: "12 min",
+          mood: "En liten høsttur",
+        },
+      ];
+
+      const form = document.querySelector("#journey-form");
+      const list = document.querySelector("#trip-list");
+      const from = document.querySelector("#from");
+      const to = document.querySelector("#to");
+      const modeButtons = document.querySelectorAll(".mode-button");
+      const themeToggle = document.querySelector("#theme-toggle");
+      let timeMode = "departure";
+
+      themeToggle.addEventListener("click", () => {
+        const isDark = document.body.classList.toggle("halloween-dark");
+        themeToggle.setAttribute("aria-pressed", String(isDark));
+        themeToggle.setAttribute(
+          "aria-label",
+          isDark
+            ? "Slå av mørkt Halloween-tema"
+            : "Slå på mørkt Halloween-tema",
+        );
+        themeToggle.querySelector(".theme-icon").textContent = isDark
+          ? "☀️"
+          : "🌙";
+        themeToggle.querySelector(".theme-label").textContent = isDark
+          ? "Lyst tema"
+          : "Mørkt tema";
+        document
+          .querySelector('meta[name="theme-color"]')
+          .setAttribute("content", isDark ? "#17131d" : "#f8f6f3");
+      });
+
+      function renderTrips() {
+        const origin = from.value;
+        const destination = to.value;
+        document.querySelector("#results-title").textContent =
+          origin === destination
+            ? "Velg to ulike stopp"
+            : `${origin} → ${destination}`;
+
+        if (origin === destination) {
+          list.innerHTML =
+            '<div class="empty-state">Start og mål er samme sted — velg et annet stopp, så finner vi veien videre.</div>';
+          return;
+        }
+
+        list.innerHTML = exampleTrips
+          .map(
+            (trip, index) => `
+        <article class="trip-card">
+          <div class="trip-time">
+            <strong>${timeMode === "arrival" ? trip.arrive : trip.time}</strong>
+            <span>${timeMode === "arrival" ? "ankomst" : "avgang"}</span>
+          </div>
+          <div class="trip-route">
+            <div class="route-stops">
+              <span class="stop-dot"></span><span class="route-line"></span><span class="stop-dot destination-dot"></span>
+              <span class="stop-name">${origin}</span>
+              <span class="stop-name destination-name">${destination}</span>
+            </div>
+          </div>
+          <div class="trip-details">
+            <span class="line-pill"><span class="bus-icon" aria-hidden="true">↗</span>${trip.line}</span>
+            <span class="trip-via">${trip.via}</span>
+          </div>
+          <div class="trip-duration"><strong>${trip.duration}</strong><span>${trip.mood}</span></div>
+          <span class="trip-arrow" aria-hidden="true">↗</span>
+        </article>`,
+          )
+          .join("");
+      }
+
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        renderTrips();
+        document
+          .querySelector("#avganger")
+          .scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+
+      document.querySelector("#swap").addEventListener("click", () => {
+        const previous = from.value;
+        from.value = to.value;
+        to.value = previous;
+      });
+
+      modeButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          timeMode = button.dataset.mode;
+          modeButtons.forEach((item) =>
+            item.classList.toggle("selected", item === button),
+          );
+        });
+      });
+
+      const now = new Date();
+      const localDate = new Date(
+        now.getTime() - now.getTimezoneOffset() * 60000,
+      )
+        .toISOString()
+        .slice(0, 10);
+      document.querySelector("#travel-date").value = localDate;
+      document.querySelector("#travel-time").value =
+        `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+      document.querySelector("#today-label").textContent =
+        new Intl.DateTimeFormat("no-NO", {
+          weekday: "long",
+          day: "numeric",
+          month: "long",
+        }).format(now);
+      renderTrips();
+    </script>
+  </body>
+</html>
